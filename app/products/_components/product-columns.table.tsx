@@ -31,10 +31,11 @@ export const ProductTableColumns: ColumnDef<Product>[] = [
     header: "Status",
     cell:(row) => {
         const product = row.row.original
+        // @ts-expect-error - status is a string
         const label = getStatusLabel(product.status)
         return(
-            <Badge className="gap-2" variant={product.status === "IN_STOCK" ? "default" : "secondary"}>
-                <CircleIcon size={10} className={product.status === "IN_STOCK" ? "fill-white" : "fill-black"}/>
+            <Badge className="gap-2" variant={label === "Em estoque" ? "default" : "secondary"} /* @ts-ignore */>
+                <CircleIcon  size={10} className={product.status === "IN_STOCK" ? "fill-white" : "fill-black"}/>
                 {label}
             </Badge>
         )

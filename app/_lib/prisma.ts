@@ -1,3 +1,6 @@
+/* eslint-disable no-var */
+/* eslint-disable no-unused-vars */
+
 import { PrismaClient } from "@prisma/client";
 declare global {
   var cachedPrisma: ReturnType<typeof createPrismaClient>;
