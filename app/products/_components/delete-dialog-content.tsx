@@ -19,7 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/app/_components/ui/dropdown-menu";
-import { Edit2Icon, MoreHorizontalIcon, Trash2Icon } from "lucide-react";
+import { ClipboardCopy, Edit2Icon, MoreHorizontalIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 
 interface DeleteDialogContentProps {
@@ -46,7 +46,10 @@ const DeleteDialogContent = ({productId}: DeleteDialogContentProps) => {
         <DropdownMenuContent>
           <DropdownMenuLabel>Opções</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>algo</DropdownMenuItem>
+          <DropdownMenuItem>
+            <ClipboardCopy/>
+            Copiar ID
+          </DropdownMenuItem>
           <DropdownMenuItem>
             <Edit2Icon />
             Editar
