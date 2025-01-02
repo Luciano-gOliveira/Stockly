@@ -47,6 +47,7 @@ const CreateProductButton = () => {
     },
   });
 
+
   const onSubmit = async (data: CreateProductSchema) => {
     await createProductAction(data);
     setDialogIsOpen(false);
