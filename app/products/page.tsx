@@ -1,6 +1,6 @@
 import { PlusIcon } from "lucide-react";
 import { DataTable } from "../_components/ui/data-table";
-import { ProductTableColumns } from "./_components/product-columns-table";
+import { ProductTableColumns } from "./_components/table-columns";
 import {
   cachedGetProducts,
   getProducts,
