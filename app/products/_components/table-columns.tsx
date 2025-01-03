@@ -86,7 +86,7 @@ export const ProductTableColumns: ColumnDef<Product>[] = [
     header: "Actions",
     cell: (row) => {
       //passa os dados do row pros defaultValues
-      <ProductTableDropdownMenu product={row.row.original}/>
+      return <ProductTableDropdownMenu product={row.row.original}/>
     },
   },
 ];
