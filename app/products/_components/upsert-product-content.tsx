@@ -27,6 +27,7 @@ import { Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 
 interface UpsertProductContentProps {
   defaultValues?: UpsertProductSchema;
@@ -48,17 +49,20 @@ const UpsertProductContent = ({
     },
   });
 
-  const onSubmit = async (data: UpsertProductSchema) => {
-    try{
-      await upsertProduct({...data, id: defaultValues?.id});
-      onSuccess?.();
-    }catch(error){
-      console.error(error)
-    }
-  };
-
   // isEditing equivale ao momento em que os valoresPadrao passados na edição existem (são verdadeiros)
   const isEditing = !!defaultValues;
+
+  const onSubmit = async (data: UpsertProductSchema) => {
+    try {
+      await upsertProduct({ ...data, id: defaultValues?.id });
+      isEditing
+        ? toast.success("Produto atualizado com sucesso!")
+        : toast.success("Produto criado com sucesso!");
+      onSuccess?.();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <DialogContent>

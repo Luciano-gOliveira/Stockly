@@ -44,6 +44,7 @@ export const ProductTableColumns: ColumnDef<Product>[] = [
     accessorKey: "price",
     header: "Valor Unitário",
     cell: (row) => {
+      //ver mais sobre formatação
       const product = row.row.original;
       return Intl.NumberFormat("pt-BR", {
         style: "currency",

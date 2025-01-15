@@ -20,8 +20,8 @@ const ProductsPage = async () => {
     <div className="w-full px-8">
       <div className="flex items-center justify-between py-4 pt-6">
         <div>
-          <span className="text-gray-500">produtos</span>
-          <h2 className="text-xl font-bold">Gestão de produtos</h2>
+          <span className="text-gray-500">Gestão de Produtos</span>
+          <h2 className="text-xl font-bold">Produtos</h2>
         </div>
         <CreateProductButton/>
       </div>
