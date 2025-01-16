@@ -73,8 +73,20 @@ const UpsertSaleProductContent = ({
     );
     if (!selectedProduct) return;
     setSelectedProduct((currentProducts) => {
+      //verificar se o produto existe
       const existingProduct = currentProducts.find((product) => product.id === selectedProduct.id)
       if(existingProduct){
+        //verificar se a quantidade do produto selecionado + a quantidade do produto existente é maior que o estoque
+        const productIsOutOfStock = existingProduct.quantity + data.quantity > selectedProduct.stock
+        if(productIsOutOfStock){
+          form.setError("quantity", {
+            message: "Quantidade indisponível em estoque."
+          })
+          return currentProducts
+        }
+       form.reset()
+
+        //código para aumentar a quantidade
         return currentProducts.map((product) => {
           if(product.id === selectedProduct.id){
             return {
@@ -85,11 +97,20 @@ const UpsertSaleProductContent = ({
           return product
         })
       }
+      const productIsOutOfStock = data.quantity > selectedProduct?.stock
+      if(productIsOutOfStock){
+        form.setError("quantity", {
+          message: "Quantidade indisponível em estoque."
+        })
+        return currentProducts
+      }
+      //resets só acontecem se
+      form.reset()
+      //se não existe ele adiciona tudo que ja existe e o produto selecionado com seus dados
       return [
         ...currentProducts, {...selectedProduct, price: Number(selectedProduct.price), quantity: data.quantity}
       ]
     });
-    form.reset()
   };
 
   //código para totalizar o preço dos produtos
