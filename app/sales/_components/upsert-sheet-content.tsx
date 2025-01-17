@@ -14,18 +14,30 @@ import { Input } from "@/app/_components/ui/input";
 import {
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
 } from "@/app/_components/ui/sheet";
-import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/app/_components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/app/_components/ui/table";
 import { formatCurrency } from "@/app/_helpers/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Product } from "@prisma/client";
-import { MoreHorizontalIcon, PlusIcon } from "lucide-react";
+import { CheckIcon, MoreHorizontalIcon, PlusIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import SalesTableDropdownMenu from "./table-dropdown-menu";
+import { createSale } from "@/app/_actions/sale/create-sale";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   productId: z.string().uuid({
@@ -41,6 +53,7 @@ type FormSchema = z.infer<typeof formSchema>;
 interface UpsertSaleProductContentProps {
   products: Product[];
   productOptions: ComboboxOption[];
+  onSubmitSuccess: () => void
 }
 
 interface SelectedProducts {
@@ -53,6 +66,7 @@ interface SelectedProducts {
 const UpsertSaleProductContent = ({
   products,
   productOptions,
+  onSubmitSuccess
 }: UpsertSaleProductContentProps) => {
   const [selectedProduct, setSelectedProduct] = useState<SelectedProducts[]>(
     [],
@@ -66,7 +80,6 @@ const UpsertSaleProductContent = ({
     },
   });
 
-
   const onSubmit = (data: FormSchema) => {
     const selectedProduct = products.find(
       (product) => product.id === data.productId,
@@ -74,56 +87,80 @@ const UpsertSaleProductContent = ({
     if (!selectedProduct) return;
     setSelectedProduct((currentProducts) => {
       //verificar se o produto existe
-      const existingProduct = currentProducts.find((product) => product.id === selectedProduct.id)
-      if(existingProduct){
-        //verificar se a quantidade do produto selecionado + a quantidade do produto existente é maior que o estoque
-        const productIsOutOfStock = existingProduct.quantity + data.quantity > selectedProduct.stock
-        if(productIsOutOfStock){
+      const existingProduct = currentProducts.find(
+        (product) => product.id === selectedProduct.id,
+      );
+      if (existingProduct) {
+        //validar se a quantidade do produto selecionado + a quantidade do produto existente é maior que o estoque
+        const productIsOutOfStock =
+          existingProduct.quantity + data.quantity > selectedProduct.stock;
+        if (productIsOutOfStock) {
           form.setError("quantity", {
-            message: "Quantidade indisponível em estoque."
-          })
-          return currentProducts
+            message: "Quantidade indisponível em estoque.",
+          });
+          return currentProducts;
         }
-       form.reset()
+        form.reset();
 
         //código para aumentar a quantidade
         return currentProducts.map((product) => {
-          if(product.id === selectedProduct.id){
+          if (product.id === selectedProduct.id) {
             return {
               ...product,
-              quantity: product.quantity + data.quantity
-            }
+              quantity: product.quantity + data.quantity,
+            };
           }
-          return product
-        })
+          return product;
+        });
       }
-      const productIsOutOfStock = data.quantity > selectedProduct?.stock
-      if(productIsOutOfStock){
+      //validação se o produto não existe
+      const productIsOutOfStock = data.quantity > selectedProduct?.stock;
+      if (productIsOutOfStock) {
         form.setError("quantity", {
-          message: "Quantidade indisponível em estoque."
-        })
-        return currentProducts
+          message: "Quantidade indisponível em estoque.",
+        });
+        return currentProducts;
       }
-      //resets só acontecem se
-      form.reset()
+      //resets só acontecem se a validação passar
+      form.reset();
       //se não existe ele adiciona tudo que ja existe e o produto selecionado com seus dados
       return [
-        ...currentProducts, {...selectedProduct, price: Number(selectedProduct.price), quantity: data.quantity}
-      ]
+        ...currentProducts,
+        {
+          ...selectedProduct,
+          price: Number(selectedProduct.price),
+          quantity: data.quantity,
+        },
+      ];
     });
   };
 
   //código para totalizar o preço dos produtos
-  const productsTotal = useMemo(()=> {
+  const productsTotal = useMemo(() => {
     return selectedProduct.reduce((total, product) => {
-      return total + product.price * product.quantity
-    }, 0)
-  }, [selectedProduct])
+      return total + product.price * product.quantity;
+    }, 0);
+  }, [selectedProduct]);
 
   const onDelete = (productId: string) => {
-     setSelectedProduct((currentProducts) => {
-      return currentProducts.filter((product) => product.id !== productId)
-     })
+    setSelectedProduct((currentProducts) => {
+      return currentProducts.filter((product) => product.id !== productId);
+    });
+  };
+
+  const onSubmitSale = async () => {
+    try{
+      await createSale({
+        products: selectedProduct.map(product => ({
+          id: product.id,
+          quantity: product.quantity
+        }))
+      })
+      toast.success("Venda realizada com sucesso!")
+      onSubmitSuccess()
+    }catch(error){
+      toast.error("Erro ao realizar venda")
+    }
   }
 
   return (
@@ -180,35 +217,45 @@ const UpsertSaleProductContent = ({
       </Form>
 
       <Table>
-      <TableCaption>Lista dos produtos adicionados à venda.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Produto</TableHead>
-          <TableHead>Preço Unitário</TableHead>
-          <TableHead>Quantidade</TableHead>
-          <TableHead>Total</TableHead>
-          <TableHead>Ações</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {selectedProduct.map((product) => (
-          <TableRow key={product.id}>
-            <TableCell>{product.name}</TableCell>
-            <TableCell>{formatCurrency(product.price)}</TableCell>
-            <TableCell>{product.quantity}</TableCell>
-            <TableCell>{formatCurrency(product.price * product.quantity)}</TableCell>
-            <TableCell><SalesTableDropdownMenu onDelete={onDelete} product={product}/></TableCell>
+        <TableCaption>Lista dos produtos adicionados à venda.</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Produto</TableHead>
+            <TableHead>Preço Unitário</TableHead>
+            <TableHead>Quantidade</TableHead>
+            <TableHead>Total</TableHead>
+            <TableHead>Ações</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell>{formatCurrency(productsTotal)}</TableCell>
-          <TableCell></TableCell>
-        </TableRow>
-      </TableFooter>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {selectedProduct.map((product) => (
+            <TableRow key={product.id}>
+              <TableCell>{product.name}</TableCell>
+              <TableCell>{formatCurrency(product.price)}</TableCell>
+              <TableCell>{product.quantity}</TableCell>
+              <TableCell>
+                {formatCurrency(product.price * product.quantity)}
+              </TableCell>
+              <TableCell>
+                <SalesTableDropdownMenu onDelete={onDelete} product={product} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={3}>Total</TableCell>
+            <TableCell>{formatCurrency(productsTotal)}</TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
+      <SheetFooter className="pt-6">
+      <Button onClick={onSubmitSale} className="w-full gap-2" disabled={selectedProduct.length === 0}>
+        <CheckIcon size={20}/>
+        Finalizar Venda
+      </Button>
+      </SheetFooter>    
     </SheetContent>
   );
 };
