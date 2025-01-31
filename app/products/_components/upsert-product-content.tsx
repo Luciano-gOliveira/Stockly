@@ -28,6 +28,7 @@ import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { useAction } from "next-safe-action/hooks";
 
 interface UpsertProductContentProps {
   defaultValues?: UpsertProductSchema;
@@ -39,6 +40,9 @@ const UpsertProductContent = ({
   onSuccess,
   defaultValues,
 }: UpsertProductContentProps) => {
+
+
+
   const form = useForm<UpsertProductSchema>({
     shouldUnregister: true,
     resolver: zodResolver(upsertProductSchema),
@@ -53,16 +57,24 @@ const UpsertProductContent = ({
   // isEditing equivale ao momento em que os valoresPadrao passados na edição existem (são verdadeiros)
   const isEditing = !!defaultValues;
 
-  const onSubmit = async (data: UpsertProductSchema) => {
-    try {
-      await upsertProduct({ ...data, id: defaultValues?.id });
+  const {execute: executeUpsertProduct} = useAction(upsertProduct, {
+    onSuccess: () => {
+      onSuccess?.()
       isEditing
         ? toast.success("Produto atualizado com sucesso!")
         : toast.success("Produto criado com sucesso!");
-      onSuccess?.();
-    } catch (error) {
-      console.error(error);
+    },
+    onError: () => {
+      isEditing
+        ? toast.success("Erro ao atualizar produto")
+        : toast.success("Erro ao criar produto");
     }
+  })
+
+
+  const onSubmit = async (data: UpsertProductSchema) => {
+    executeUpsertProduct({ ...data, id: defaultValues?.id })
+    
   };
 
   return (
