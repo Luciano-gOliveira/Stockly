@@ -5,9 +5,19 @@ import { Product } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
-export const getProducts = async (): Promise<Product[]> => {
-    console.log("getProducts");
-  return db.product.findMany({});
+//no prisma client existia um extends que verificava se o produto estava ou não no estoque,
+//podemos retirá-lo de do prisma client e fazer isso em um DTO
+export interface ProductDto extends Product{
+  status: "IN_STOCK" | "OUT_OF_STOCK"
+}
+
+export const getProducts = async (): Promise<ProductDto[]> => {
+    // console.log("getProducts");
+  const products = await db.product.findMany({});
+  return products.map((product) => ({
+    ...product, 
+    status: product.stock > 0 ? "IN_STOCK" : "OUT_OF_STOCK"
+  }))
 };
 
 //database caching e ISR

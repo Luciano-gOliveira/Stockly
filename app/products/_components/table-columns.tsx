@@ -27,6 +27,7 @@ import { Button } from "@/app/_components/ui/button";
 import UpsertProductContent from "./upsert-product-content";
 import { useState } from "react";
 import ProductTableDropdownMenu from "./table-dropdown-menu";
+import { ProductDto } from "@/app/_data-access/product/get-products";
 
 const getStatusLabel = (status: string) => {
   if (status === "IN_STOCK") {
@@ -35,7 +36,7 @@ const getStatusLabel = (status: string) => {
   return "Esgotado";
 };
 
-export const ProductTableColumns: ColumnDef<Product>[] = [
+export const ProductTableColumns: ColumnDef<ProductDto>[] = [
   {
     accessorKey: "name",
     header: "Produto",
@@ -61,7 +62,6 @@ export const ProductTableColumns: ColumnDef<Product>[] = [
     header: "Status",
     cell: (row) => {
       const product = row.row.original;
-      // @ts-expect-error - status is a string
       const label = getStatusLabel(product.status);
       return (
         <Badge

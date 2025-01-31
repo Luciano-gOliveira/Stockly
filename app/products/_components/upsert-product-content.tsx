@@ -73,8 +73,8 @@ const UpsertProductContent = ({
 
 
   const onSubmit = async (data: UpsertProductSchema) => {
-    executeUpsertProduct({ ...data, id: defaultValues?.id })
-    
+     executeUpsertProduct({ ...data, id: defaultValues?.id })
+
   };
 
   return (
