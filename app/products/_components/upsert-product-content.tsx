@@ -34,6 +34,7 @@ interface UpsertProductContentProps {
   onSuccess?: () => void;
 }
 
+
 const UpsertProductContent = ({
   onSuccess,
   defaultValues,

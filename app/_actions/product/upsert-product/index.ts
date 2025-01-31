@@ -3,9 +3,11 @@
 import { db } from "@/app/_lib/prisma";
 import { revalidatePath } from "next/cache";
 import { upsertProductSchema, UpsertProductSchema } from "./schema";
+import { actionClient } from "@/app/_lib/safe-action";
 
-export const upsertProduct = async (data: UpsertProductSchema) => {
-  upsertProductSchema.parse(data);
+
+export const upsertProduct = actionClient.schema(upsertProductSchema).action( async ({parsedInput: data}) => {
+
   await db.product.upsert({
     //se o produto for achado, ele é atualizado, se não, é criado
     where: {id: data.id ?? ""},
@@ -13,4 +15,4 @@ export const upsertProduct = async (data: UpsertProductSchema) => {
     create: data
   })
     revalidatePath("/products");
-};
+}) 

@@ -1,6 +1,5 @@
 import { deleteProductAction } from "@/app/_actions/product/delete-product";
 import {
-  AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
@@ -8,39 +7,28 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/app/_components/ui/alert-dialog";
-import { Button } from "@/app/_components/ui/button";
-import { Dialog, DialogTrigger } from "@/app/_components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/app/_components/ui/dropdown-menu";
-import {
-  ClipboardCopy,
-  Edit2Icon,
-  MoreHorizontalIcon,
-  Trash2Icon,
-} from "lucide-react";
+import { flattenValidationErrors } from "next-safe-action";
+import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
-import UpsertProductContent from "./upsert-product-content";
 
 interface DeleteDialogContentProps {
   productId: string;
 }
 
 const DeleteDialogContent = ({ productId }: DeleteDialogContentProps) => {
-  const handleContinueCLick = async () => {
-    try {
-      await deleteProductAction({ id: productId });
-      toast.success("Produto excluído com sucesso!");
-    } catch (error) {
-      console.error(error);
+  const {execute: executeDeleteProduct} = useAction(deleteProductAction,{
+    onError: ({error: {validationErrors, serverError}}) => {
+      const flattenedErrors = flattenValidationErrors(validationErrors)
+      console.log(validationErrors)
+      toast.error(serverError ?? flattenedErrors.formErrors[0])
+    },
+    onSuccess: () => {
+      toast.success("Produto excluído com sucesso!")
     }
+  })
+  const handleContinueCLick = async () => {
+    executeDeleteProduct({ id: productId })
   };
   return (
     
