@@ -11,13 +11,14 @@ export const SaleTableColumns: ColumnDef<SaleDto>[] = [
     {
       accessorKey: "productNames",  
       header: "Produtos",
-      //o join é feito 
-      cell: ({row: {original: {productNames}}}) => productNames.join(" ● ")
+      //o join é feito do lado do servidor 
+      // cell: ({row: {original: {productNames}}}) => productNames.join(" ● ")
     },
     {
       accessorKey: "productTotal",
       header: "Quantidade de Produtos",
-      cell: ({row : {original: {productTotal}}}) => productTotal
+      //quando não é feita nenhuma operação no cliente, ou formatação na cell, apenas usar o accessorKey
+      // cell: ({row : {original: {productTotal}}}) => productTotal
     },
     {
       accessorKey: "totalAmount",

@@ -1,4 +1,4 @@
-import { GridIcon, Package, ShoppingBasket } from "lucide-react";
+import { LayoutTemplateIcon, Package, ShoppingBasket } from "lucide-react";
 import SidebarButton from "./sidebar-button";
 
 const Sidebar = () => {
@@ -9,7 +9,7 @@ const Sidebar = () => {
       </div>
       <div className="flex flex-col gap-2 p-2 pl-4">
         <SidebarButton href="/">
-          <GridIcon size={20} />
+          <LayoutTemplateIcon size={20} />
           Dashboard
         </SidebarButton>
 
