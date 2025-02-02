@@ -35,8 +35,8 @@ export const SaleTableColumns: ColumnDef<SaleDto>[] = [
     },
     {
         header: "Ações",
-        cell: ({row: {original: id}}) => (
-          <SaleTableDropdownMenu id={id} />
+        cell: ({row: {original: sale}}) => (
+          <SaleTableDropdownMenu sale={sale} />
         )
     },
   ]

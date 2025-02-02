@@ -10,10 +10,10 @@ import { deleteSaleAction } from "@/app/_actions/sale/delete-sale";
 import { useAction } from "next-safe-action/hooks";
 
 interface SalesTableDropdownMenuProps {
-    id: Pick<Sale, "id">
+    sale: Pick<Sale, "id">
 }
 
-const SaleTableDropdownMenu = ({id} : SalesTableDropdownMenuProps) => {
+const SaleTableDropdownMenu = ({sale} : SalesTableDropdownMenuProps) => {
 
     const {execute: executeDeleteSale} = useAction(deleteSaleAction,{
         onSuccess: () => {
@@ -26,7 +26,7 @@ const SaleTableDropdownMenu = ({id} : SalesTableDropdownMenuProps) => {
 
     const handleDeleteSaleClick = () => {
         executeDeleteSale({
-            id: id.id
+            id: sale.id
         })
     }
     return ( 
@@ -41,7 +41,7 @@ const SaleTableDropdownMenu = ({id} : SalesTableDropdownMenuProps) => {
               <DropdownMenuLabel>Opções</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="cursor-pointer"
-                onClick={() => navigator.clipboard.writeText(id.id).then(() => toast.success("ID copiado para a area de transferência"))} >
+                onClick={() => navigator.clipboard.writeText(sale.id).then(() => toast.success("ID copiado para a area de transferência"))} >
                 <ClipboardCopy  />
                 Copiar ID
               </DropdownMenuItem>
