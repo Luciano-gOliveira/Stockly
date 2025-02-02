@@ -82,6 +82,7 @@ const UpsertProductContent = ({
       <DialogHeader>
         <DialogTitle>{isEditing ? "Editar" : "Criar"} Produto</DialogTitle>
         <DialogDescription>Insira as informações abaixo</DialogDescription>
+        <DialogDescription className="text-yellow-500">Dica: aperte TAB para navegar entre os campos</DialogDescription>
       </DialogHeader>
       <Form {...form}>
         {/* acessar estado  */}
