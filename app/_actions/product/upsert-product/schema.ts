@@ -13,11 +13,8 @@ export const upsertProductSchema = z.object({
     .number({
       message: "Não foi possivel converter a quantidade em estoque",
     })
-    .positive({
-      message: "A quantidade em estoque deve ser positiva",
-    })
     .int()
-    .min(1, {
+    .min(0, {
       message: "A quantidade em estoque é obrigatória",
     }),
 });
