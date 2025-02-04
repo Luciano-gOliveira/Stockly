@@ -40,6 +40,7 @@ import { createSale } from "@/app/_actions/sale/create-sale";
 import { toast } from "sonner";
 import {useAction} from "next-safe-action/hooks"
 import { flattenValidationErrors } from "next-safe-action";
+import { ProductDto } from "@/app/_data-access/product/get-products";
 
 const formSchema = z.object({
   productId: z.string().uuid({
@@ -52,11 +53,6 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
-interface UpsertSaleProductContentProps {
-  products: Product[];
-  productOptions: ComboboxOption[];
-  onSubmitSuccess: () => void
-}
 
 interface SelectedProducts {
   id: string;
@@ -65,14 +61,20 @@ interface SelectedProducts {
   quantity: number;
 }
 
+interface UpsertSaleProductContentProps {
+  products: ProductDto[];
+  productOptions: ComboboxOption[];
+  onSubmitSuccess: () => void
+  defaultSelectedProducts: SelectedProducts[]
+}
+
 const UpsertSaleProductContent = ({
+  defaultSelectedProducts,
   products,
   productOptions,
   onSubmitSuccess
 }: UpsertSaleProductContentProps) => {
-  const [selectedProduct, setSelectedProduct] = useState<SelectedProducts[]>(
-    [],
-  );
+  const [selectedProduct, setSelectedProduct] = useState<SelectedProducts[]>(defaultSelectedProducts ?? []);
 
   const {execute: executeCreateSale} = useAction(createSale,{
     onError: ({error : {validationErrors, serverError}}) => {

@@ -13,6 +13,15 @@ const SalesPage = async() => {
     label: product.name,
     value: product.id
   }))
+
+  //dados que o datatable vai usar para renderizar produtos e oções do combobox
+  //TODO: entender como asles acessa os products e Options
+  const salesData = sales.map(sale => ({
+    ...sale,
+    products,
+    productOptions
+  }))
+  
     return ( 
         <div className="w-full px-8">
         <div className="flex items-center justify-between py-4 pt-6">
@@ -27,7 +36,7 @@ const SalesPage = async() => {
           <DataTable
             // data={JSON.parse(JSON.stringify(products))}
             // columns={ProductTableColumns}
-            data={JSON.parse(JSON.stringify(sales))}
+            data={salesData}
             columns={SaleTableColumns}
           />
         </div>
