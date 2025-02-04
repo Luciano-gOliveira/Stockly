@@ -36,14 +36,18 @@ import { ComboboxOption } from "@/app/_components/ui/combobox";
 
 //para definir na prop o que será passado para opções de deleção e edição de venda
 interface SalesTableDropdownMenuProps {
-  sale: Pick<SaleDto, "id">;
+  sale: Pick<SaleDto, "id" | "saleProducts">; //vou precisar para receber os produtos da venda no upsert
   //cada uma deve ser uma lista pois o combobox vai ter uma lista de opções e o mesmo vale pra produtos
-  products: ProductDto[] 
-  productOptions: ComboboxOption[]
+  products: ProductDto[];
+  productOptions: ComboboxOption[];
 }
 
-const SaleTableDropdownMenu = ({ sale, products, productOptions }: SalesTableDropdownMenuProps) => {
-  const [sheetIsOpen, setSheetIsOpen] = useState(false)
+const SaleTableDropdownMenu = ({
+  sale,
+  products,
+  productOptions,
+}: SalesTableDropdownMenuProps) => {
+  const [sheetIsOpen, setSheetIsOpen] = useState(false);
   const { execute: executeDeleteSale } = useAction(deleteSaleAction, {
     onSuccess: () => {
       toast.success("Venda excluída com sucesso!");
@@ -115,8 +119,18 @@ const SaleTableDropdownMenu = ({ sale, products, productOptions }: SalesTableDro
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      {/* agora é possivel acessar os produtos e opções nas props do upsert */}
-      <UpsertSaleProductContent onSubmitSuccess={() => setSheetIsOpen(false)} productOptions={productOptions} products={products}/>
+      {/* agora é possivel acessar os produtos e opções nas props do upsert, no upsert precisamos passar os produtos e as opçoes de prod */}
+      <UpsertSaleProductContent
+        onSubmitSuccess={() => setSheetIsOpen(false)}
+        productOptions={productOptions}
+        products={products}
+        defaultSelectedProducts={sale.saleProducts.map(saleProduct => ({
+          id: saleProduct.productId,
+          quantity: saleProduct.quantity,
+          name: saleProduct.productName,
+          price: saleProduct.unitPrice 
+        }))}
+      />
     </Sheet>
   );
 };

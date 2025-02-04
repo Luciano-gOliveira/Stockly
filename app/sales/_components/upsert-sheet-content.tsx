@@ -54,6 +54,7 @@ const formSchema = z.object({
 type FormSchema = z.infer<typeof formSchema>;
 
 
+//preciso lembrar desses dados pra saber os campos que os selectedProducts padrao devem receber
 interface SelectedProducts {
   id: string;
   name: string;
