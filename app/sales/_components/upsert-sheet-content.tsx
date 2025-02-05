@@ -36,9 +36,9 @@ import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import UpsertSaleTableDropdownMenu from "./upsert-table-dropdown-menu";
-import { createSale } from "@/app/_actions/sale/create-sale";
+import { upsertSale } from "@/app/_actions/sale/upsert-sale";
 import { toast } from "sonner";
-import {useAction} from "next-safe-action/hooks"
+import { useAction } from "next-safe-action/hooks";
 import { flattenValidationErrors } from "next-safe-action";
 import { ProductDto } from "@/app/_data-access/product/get-products";
 
@@ -53,7 +53,6 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
-
 //preciso lembrar desses dados pra saber os campos que os selectedProducts padrao devem receber
 interface SelectedProducts {
   id: string;
@@ -63,31 +62,35 @@ interface SelectedProducts {
 }
 
 interface UpsertSaleProductContentProps {
+  saleId?: string //para saber se é uma edição ou criação, se receber um saleId, será edição
   products: ProductDto[];
   productOptions: ComboboxOption[];
-  onSubmitSuccess: () => void
-  defaultSelectedProducts: SelectedProducts[]
+  onSubmitSuccess: () => void;
+  defaultSelectedProducts: SelectedProducts[];
 }
 
 const UpsertSaleProductContent = ({
+  saleId,
   defaultSelectedProducts,
   products,
   productOptions,
-  onSubmitSuccess
+  onSubmitSuccess,
 }: UpsertSaleProductContentProps) => {
-  const [selectedProduct, setSelectedProduct] = useState<SelectedProducts[]>(defaultSelectedProducts ?? []);
+  const [selectedProduct, setSelectedProduct] = useState<SelectedProducts[]>(
+    defaultSelectedProducts ?? [],
+  );
 
-  const {execute: executeCreateSale} = useAction(createSale,{
-    onError: ({error : {validationErrors, serverError}}) => {
-      const flattenedErrors = flattenValidationErrors(validationErrors)
+  const { execute: executeUpsertSale } = useAction(upsertSale, {
+    onError: ({ error: { validationErrors, serverError } }) => {
+      const flattenedErrors = flattenValidationErrors(validationErrors);
       // console.log({validationErrors})
-      toast.error(serverError ?? flattenedErrors.formErrors[0])
+      toast.error(serverError ?? flattenedErrors.formErrors[0]);
     },
-    onSuccess: ()=> {
-      toast.success("Venda realizada com sucesso")
-      onSubmitSuccess()
-    }
-  })
+    onSuccess: () => {
+      toast.success("Venda realizada com sucesso");
+      onSubmitSuccess();
+    },
+  });
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -166,13 +169,14 @@ const UpsertSaleProductContent = ({
   };
 
   const onSubmitSale = async () => {
-    executeCreateSale({
-      products: selectedProduct.map(product => ({
+    executeUpsertSale({ //ao chamar o upsert-sale vai ser necessario o id
+      id: saleId, //ao enviar a venda receberá o ID para enviar como atualização
+      products: selectedProduct.map((product) => ({
         id: product.id,
-        quantity: product.quantity
-      }))
-    })
-  }
+        quantity: product.quantity,
+      })),
+    });
+  };
 
   return (
     <SheetContent className="!max-w-[700px] overflow-y-auto [&::-webkit-scrollbar]:hidden">
@@ -248,7 +252,10 @@ const UpsertSaleProductContent = ({
                 {formatCurrency(product.price * product.quantity)}
               </TableCell>
               <TableCell>
-                <UpsertSaleTableDropdownMenu onDelete={onDelete} product={product} />
+                <UpsertSaleTableDropdownMenu
+                  onDelete={onDelete}
+                  product={product}
+                />
               </TableCell>
             </TableRow>
           ))}
@@ -262,11 +269,15 @@ const UpsertSaleProductContent = ({
         </TableFooter>
       </Table>
       <SheetFooter className="pt-6">
-      <Button onClick={onSubmitSale} className="w-full gap-2" disabled={selectedProduct.length === 0}>
-        <CheckIcon size={20}/>
-        Finalizar Venda
-      </Button>
-      </SheetFooter>    
+        <Button
+          onClick={onSubmitSale}
+          className="w-full gap-2"
+          disabled={selectedProduct.length === 0}
+        >
+          <CheckIcon size={20} />
+          Finalizar Venda
+        </Button>
+      </SheetFooter>
     </SheetContent>
   );
 };

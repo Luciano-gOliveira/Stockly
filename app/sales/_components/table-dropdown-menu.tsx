@@ -121,6 +121,7 @@ const SaleTableDropdownMenu = ({
       </AlertDialog>
       {/* agora é possivel acessar os produtos e opções nas props do upsert, no upsert precisamos passar os produtos e as opçoes de prod */}
       <UpsertSaleProductContent
+        saleId={sale.id} //recebendo o id para o upsert reconhecer se é edição ou criação
         onSubmitSuccess={() => setSheetIsOpen(false)}
         productOptions={productOptions}
         products={products}
