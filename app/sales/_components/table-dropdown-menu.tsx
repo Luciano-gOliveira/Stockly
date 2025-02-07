@@ -45,7 +45,7 @@ interface SalesTableDropdownMenuProps {
 const SaleTableDropdownMenu = ({
   sale,
   products,
-  productOptions,
+  productOptions, 
 }: SalesTableDropdownMenuProps) => {
   const [sheetIsOpen, setSheetIsOpen] = useState(false);
   const { execute: executeDeleteSale } = useAction(deleteSaleAction, {

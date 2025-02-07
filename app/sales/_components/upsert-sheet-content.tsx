@@ -73,7 +73,7 @@ const UpsertSaleProductContent = ({
   saleId,
   defaultSelectedProducts,
   products,
-  productOptions,
+  productOptions,//eu poderia pegar esses dados no lado do cliente através de um fetch e isso evitaria passar tantas props, mas isso ia gerar um tempo de carregamento maior pra buscar os dados 
   onSubmitSuccess,
 }: UpsertSaleProductContentProps) => {
   const [selectedProduct, setSelectedProduct] = useState<SelectedProducts[]>(

@@ -9,6 +9,7 @@ import {
 } from "../_data-access/product/get-products";
 import ProductList from "./_components/product-list";
 import CreateProductButton from "./_components/create-product-button";
+import Header, { HeaderLeft, HeaderRight, HeaderSubtitle, HeaderTitle } from "../_components/header";
 
 
 const ProductsPage = async () => {
@@ -18,13 +19,21 @@ const ProductsPage = async () => {
   // sum(2,2)
   return (
     <div className="w-full px-8">
-      <div className="flex items-center justify-between py-4 pt-6">
+      <Header>
+        <HeaderLeft>
+          <HeaderSubtitle>Gestão de Produtos</HeaderSubtitle>
+          <HeaderTitle>Produtos</HeaderTitle>
+        </HeaderLeft>
+        <HeaderRight>
+          <CreateProductButton/>
+        </HeaderRight>
+      </Header>
+      {/* <div className="flex items-center justify-between py-4 pt-6">
         <div>
           <span className="text-gray-500">Gestão de Produtos</span>
           <h2 className="text-xl font-bold">Produtos</h2>
         </div>
-        <CreateProductButton/>
-      </div>
+      </div> */}
       <div className="rounded-sm bg-white">
         {/* <ProductList/> */}
         <DataTable
