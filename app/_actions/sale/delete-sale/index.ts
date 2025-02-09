@@ -8,10 +8,34 @@ import { revalidatePath } from "next/cache";
 export const deleteSaleAction = actionClient
   .schema(deleteSaleSchema)
   .action(async ({ parsedInput: { id } }) => {
+
+    const sale = await db.sale.findUnique({
+      where: {
+        id
+      },
+      include: {
+        saleProducts: true
+      }
+    })
+
+    if(!sale)return
+
     await db.sale.delete({
         where:{
             id,
         }
     })
-    revalidatePath("/sales")
+
+    for(const product of sale.saleProducts){
+      await db.product.update({
+        where: {id: product.productId},
+        data: {
+          stock: {
+            increment: product.quantity
+          }
+        }
+      })
+    }
+
+    revalidatePath("/", "layout")
   });
