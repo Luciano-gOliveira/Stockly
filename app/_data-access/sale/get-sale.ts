@@ -1,6 +1,7 @@
+import "server-only"
+
 import { db } from '@/app/_lib/prisma';
-import { Sale, SaleProduct } from '@prisma/client';
-import { Quando } from 'next/font/google';
+
 
 interface SaleProductDto { //para acessar somente o que vai ser preciso no upsert / adicionado no saleproducts do dto exportado
     productId: string
