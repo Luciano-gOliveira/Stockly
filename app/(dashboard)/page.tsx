@@ -1,7 +1,6 @@
 import { CircleDollarSignIcon, DollarSignIcon, PackageIcon, ShoppingBasketIcon } from "lucide-react";
 import Header, {
   HeaderLeft,
-  HeaderRight,
   HeaderSubtitle,
   HeaderTitle,
 } from "../_components/header";
