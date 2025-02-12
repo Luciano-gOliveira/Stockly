@@ -8,6 +8,8 @@ interface DashboardDto {
   totalStock: number;
   totalProducts: number;
 }
+
+//TODO: ajeitar essa bagaça pra não ter que fazer query SQL
 export const GetDashboard = async (): Promise<DashboardDto> => {
   const totalRevenueQuery = `
     SELECT SUM("unitPrice" * "quantity") as "totalRevenue"
