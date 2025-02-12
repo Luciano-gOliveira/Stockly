@@ -2,8 +2,9 @@ import "server-only";
 import { db } from "@/app/_lib/prisma";
 import dayjs from "dayjs"
 
-interface DayTotalRevenue {
-  day: Date
+export interface DayTotalRevenue {
+  // day: Date
+  day: string
   totalRevenue: number
 }
 
@@ -19,7 +20,7 @@ interface DashboardDto {
 //TODO: ajeitar essa bagaça pra não ter que fazer query SQL
 export const GetDashboard = async (): Promise<DashboardDto> => {
   const today = dayjs().endOf("day").toDate()
-  const last14days = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].map( day => {
+  const last14days = [13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0].map( day => {
     return dayjs(today).subtract(day, "day")
   })
 
@@ -36,7 +37,8 @@ export const GetDashboard = async (): Promise<DashboardDto> => {
     )
     // console.log({totalLast14DaysRevenue})
     totalLast14DaysRevenue.push({
-      day: day.toDate(),
+      // day: day.toDate(),
+      day: day.format("DD/MM"),
       totalRevenue: dayTotalRevenue[0].totalRevenue
     })
   }

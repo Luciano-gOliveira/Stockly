@@ -17,5 +17,5 @@ export const SummaryCardTitle = ({ children }: { children: ReactNode }) => {
 }
 
 export const SummaryCard = ({ children }: { children: ReactNode }) => {
-  return <div className="bg-white space-y-1 p-4 rounded-xl">{children}</div>;
+  return <div className="bg-white space-y-1 p-3 rounded-xl">{children}</div>;
 };
