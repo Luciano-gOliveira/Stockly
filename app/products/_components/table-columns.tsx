@@ -28,13 +28,9 @@ import UpsertProductContent from "./upsert-product-content";
 import { useState } from "react";
 import ProductTableDropdownMenu from "./table-dropdown-menu";
 import { ProductDto } from "@/app/_data-access/product/get-products";
+import ProductStatusBadge from "@/app/_components/product-status-badge";
 
-const getStatusLabel = (status: string) => {
-  if (status === "IN_STOCK") {
-    return "Em estoque";
-  }
-  return "Esgotado";
-};
+
 
 export const ProductTableColumns: ColumnDef<ProductDto>[] = [
   {
@@ -62,23 +58,8 @@ export const ProductTableColumns: ColumnDef<ProductDto>[] = [
     header: "Status",
     cell: (row) => {
       const product = row.row.original;
-      const label = getStatusLabel(product.status);
       return (
-        <Badge
-          className="gap-2"
-          variant={
-            label === "Em estoque" ? "default" : "secondary"
-          } /* @ts-ignore */
-        >
-          <CircleIcon
-            size={10}
-            className={
-              /* @ts-ignore */
-              product.status === "IN_STOCK" ? "fill-white" : "fill-black"
-            }
-          />
-          {label}
-        </Badge>
+        <ProductStatusBadge status={product.status} />
       );
     },
   },

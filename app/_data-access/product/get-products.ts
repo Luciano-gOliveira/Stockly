@@ -5,10 +5,12 @@ import { Product } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
+export type ProductStatusDto = "IN_STOCK" | "OUT_OF_STOCK"
+
 //no prisma client existia um extends que verificava se o produto estava ou não no estoque,
 //podemos retirá-lo de do prisma client e fazer isso em um DTO
 export interface ProductDto extends Product{
-  status: "IN_STOCK" | "OUT_OF_STOCK"
+  status: ProductStatusDto
 }
 
 export const getProducts = async (): Promise<ProductDto[]> => {
