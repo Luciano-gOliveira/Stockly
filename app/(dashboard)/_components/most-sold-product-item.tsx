@@ -1,5 +1,4 @@
 import ProductStatusBadge from "@/app/_components/product-status-badge";
-import { Badge } from "@/app/_components/ui/badge";
 import { MostSoldProductDto } from "@/app/_data-access/dashboard/get-dashboard";
 import { formatCurrency } from "@/app/_helpers/currency";
 
