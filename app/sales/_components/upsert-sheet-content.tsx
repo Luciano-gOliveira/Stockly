@@ -32,7 +32,7 @@ import { formatCurrency } from "@/app/_helpers/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Product } from "@prisma/client";
 import { CheckIcon, MoreHorizontalIcon, PlusIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import UpsertSaleTableDropdownMenu from "./upsert-table-dropdown-menu";
@@ -62,6 +62,7 @@ interface SelectedProducts {
 }
 
 interface UpsertSaleProductContentProps {
+  isOpen: boolean
   saleId?: string //para saber se é uma edição ou criação, se receber um saleId, será edição
   products: ProductDto[];
   productOptions: ComboboxOption[];
@@ -70,6 +71,7 @@ interface UpsertSaleProductContentProps {
 }
 
 const UpsertSaleProductContent = ({
+  isOpen,
   saleId,
   defaultSelectedProducts,
   products,
@@ -99,6 +101,17 @@ const UpsertSaleProductContent = ({
       quantity: 1,
     },
   });
+
+  useEffect(() => {
+    if (!isOpen) {
+      form.reset()
+      setSelectedProduct([])
+    }
+  }, [form, isOpen])
+
+  useEffect(() => {
+    setSelectedProduct(defaultSelectedProducts ?? [])
+  }, [defaultSelectedProducts])
 
   const onSubmit = (data: FormSchema) => {
     const selectedProduct = products.find(

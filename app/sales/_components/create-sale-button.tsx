@@ -7,9 +7,10 @@ import { useState } from "react";
 import { Product } from "@prisma/client";
 import { ComboboxOption } from "@/app/_components/ui/combobox";
 import { PlusIcon } from "lucide-react";
+import { ProductDto } from "@/app/_data-access/product/get-products";
 
 interface UpsertSaleButtonProps {
-  products: Product[];
+  products: ProductDto[];
   productOptions: ComboboxOption[];
 }
 const UpsertSaleButton = ({
@@ -27,7 +28,8 @@ const UpsertSaleButton = ({
       </SheetTrigger>
       <UpsertSaleProductContent
         onSubmitSuccess={() => setSheetIsOpen(false)}
-        products={products}
+        isOpen={sheetIsOpen}
+        products={JSON.parse(JSON.stringify(products))}
         productOptions={productOptions}
       />
     </Sheet>
