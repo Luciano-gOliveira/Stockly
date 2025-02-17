@@ -54,7 +54,6 @@ export const GetDashboard = async (): Promise<DashboardDto> => {
     })
   }
 
-
   const totalRevenueQuery = `
     SELECT SUM("SaleProduct"."unitPrice" * "SaleProduct"."quantity") as "totalRevenue"
     FROM "SaleProduct"
