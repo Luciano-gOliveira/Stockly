@@ -1,7 +1,7 @@
 "use client"
 
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/app/_components/ui/chart";
-import { DayTotalRevenue } from "@/app/_data-access/dashboard/get-dashboard";
+import { DayTotalRevenue } from "@/app/_data-access/dashboard/get-total-last-14-days-revenue";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 const chartConfig: ChartConfig = {
@@ -15,6 +15,7 @@ interface RevenueChartProps {
 }
 
 const RevenueChart = ({ data }: RevenueChartProps) => {
+    //TODO: rever se é uma action ou uma DAF que consegue interagir com client components
     return (
         <ChartContainer config={chartConfig} className="min-h-0 w-full">
             <BarChart accessibilityLayer data={data}>
