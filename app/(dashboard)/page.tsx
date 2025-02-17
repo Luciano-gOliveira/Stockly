@@ -1,17 +1,20 @@
-import { CircleDollarSignIcon, DollarSignIcon, PackageIcon, ShoppingBasketIcon } from "lucide-react";
+import { Loader2Icon } from "lucide-react";
 import Header, {
   HeaderLeft,
   HeaderSubtitle,
   HeaderTitle,
 } from "../_components/header";
-import { SummaryCard, SummaryCardDescription, SummaryCardIcon, SummaryCardTitle } from "./_components/summary-card";
-import { GetDashboard } from "../_data-access/dashboard/get-dashboard";
-import { formatCurrency } from "../_helpers/currency";
-import RevenueChart from "./_components/revenue-chart";
-import MostSoldProductItem from "./_components/most-sold-product-item";
+import TotalRevenueCard from "./_components/total-revenue-card";
+import TodayRevenueCard from "./_components/today-revenue-card";
+import { Suspense } from "react";
+import { Skeleton } from "../_components/ui/skeleton";
+import TotalSales from "./_components/total-sales-card";
+import TotalInStockCard from "./_components/total-in-stock-card";
+import TotalProductCard from "./_components/total-product-card";
+import TotalLast14DaysRevenueCard from "./_components/total-last-14-days-revenue-card";
+import MostSoldProductsCard from "./_components/most-sold-product-card";
 
 const Home = async () => {
-  const { totalRevenue, todayRevenue, totalSales, totalStock, totalProducts, totalLast14DaysRevenue, mostSoldProducts } = await GetDashboard()
   return (
     <div className="w-full px-8 mb-2 flex flex-col">
       <Header>
@@ -21,63 +24,32 @@ const Home = async () => {
         </HeaderLeft>
       </Header>
       <div className="grid grid-cols-2 gap-4 mb-4">
-        <SummaryCard>
-          <SummaryCardIcon>
-            <DollarSignIcon />
-          </SummaryCardIcon>
-          <SummaryCardDescription>Total de vendas</SummaryCardDescription>
-          <SummaryCardTitle>{formatCurrency(totalRevenue)}</SummaryCardTitle>
-        </SummaryCard>
-        <SummaryCard>
-          <SummaryCardIcon>
-            <DollarSignIcon />
-          </SummaryCardIcon>
-          <SummaryCardDescription>Vendas hoje</SummaryCardDescription>
-          <SummaryCardTitle>{formatCurrency(todayRevenue)}</SummaryCardTitle>
-        </SummaryCard>
+        <Suspense fallback={<Skeleton className="bg-white bg-opacity-80 rounded-xl p-4"><Loader2Icon className="animate-spin bg-opacity-50 text-slate-400" /></Skeleton>}>
+          <TotalRevenueCard />
+        </Suspense>
+
+        <Suspense fallback={<Skeleton className="bg-white bg-opacity-80 rounded-xl p-4"><Loader2Icon className="animate-spin bg-opacity-50 text-slate-400" /></Skeleton>}>
+          <TodayRevenueCard />
+        </Suspense>
       </div>
       <div className="grid grid-cols-3 gap-4">
-        <SummaryCard>
-          <SummaryCardIcon>
-            <CircleDollarSignIcon />
-          </SummaryCardIcon>
-          <SummaryCardDescription>Vendas totais</SummaryCardDescription>
-          <SummaryCardTitle>{totalSales}</SummaryCardTitle>
-        </SummaryCard>
-        <SummaryCard>
-          <SummaryCardIcon>
-            <PackageIcon />
-          </SummaryCardIcon>
-          <SummaryCardDescription>Total em estoque</SummaryCardDescription>
-          <SummaryCardTitle>{totalStock}</SummaryCardTitle>
-        </SummaryCard>
-        <SummaryCard>
-          <SummaryCardIcon>
-            <ShoppingBasketIcon />
-          </SummaryCardIcon>
-          <SummaryCardDescription>Produtos</SummaryCardDescription>
-          <SummaryCardTitle>{totalProducts}</SummaryCardTitle>
-        </SummaryCard>
+        <Suspense fallback={<Skeleton className="bg-white bg-opacity-80 rounded-xl p-4"><Loader2Icon className="animate-spin bg-opacity-50 text-slate-400" /></Skeleton>}>
+          <TotalSales />
+        </Suspense>
+        <Suspense fallback={<Skeleton className="bg-white bg-opacity-80 rounded-xl p-4"><Loader2Icon className="animate-spin bg-opacity-50 text-slate-400" /></Skeleton>}>
+          <TotalInStockCard />
+        </Suspense>
+
+        <TotalProductCard />
       </div>
 
       <div className="grid min-h-0 grid-cols-[minmax(0,2fr),minmax(0,1fr)] gap-4 mb-6">
-        <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white p-4 my-4">
-          {/* <div className="mb-2 h-9 w-9 items-center flex rounded-xl justify-center bg-emerald-500 bg-opacity-10">
-            <DollarSignIcon className="text-emerald-500"/>
-          </div> */}
-          <div className="flex items-center gap-2">
-            <p className="text-lg font-semibold text-slate-900">Receita</p>
-
-            <p className="text-sm text-slate-400"><span className="text-emerald-400">•</span> Últimos 14 dias</p>
-          </div>
-          <RevenueChart data={totalLast14DaysRevenue} />
-        </div>
-        <div className="flex h-full flex-col overflow-hidden rounded-xl bg-white p-6 my-4">
-          <p className="text-lg font-semibold text-slate-900">Produtos mais vendidos</p>
-          <div className="mt-4 overflow-y-auto space-y-4">
-            {mostSoldProducts.map(product => <MostSoldProductItem key={product.productId} product={product} />)}
-          </div>
-        </div>
+      <Suspense fallback={<Skeleton className="bg-white mt-4 bg-opacity-80 rounded-xl p-4"><Loader2Icon className="animate-spin bg-opacity-50 text-slate-400" /></Skeleton>}>
+        <TotalLast14DaysRevenueCard/>
+      </Suspense>
+      <Suspense fallback={<Skeleton className="bg-white mt-4 bg-opacity-80 rounded-xl p-4"><Loader2Icon className="animate-spin bg-opacity-50 text-slate-400" /></Skeleton>}>
+        <MostSoldProductsCard/>
+      </Suspense>
       </div>
     </div>
   );
