@@ -18,7 +18,7 @@ const ProductsPage = async () => {
   // const products = await gretProductsWithCache()
   // sum(2,2)
   return (
-    <div className="w-full px-8">
+    <div className="w-full px-8 overflow-auto">
       <Header>
         <HeaderLeft>
           <HeaderSubtitle>Gestão de Produtos</HeaderSubtitle>
