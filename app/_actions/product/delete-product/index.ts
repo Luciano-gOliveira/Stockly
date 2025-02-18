@@ -2,7 +2,7 @@
 
 import { db } from "@/app/_lib/prisma"
 import { revalidatePath } from "next/cache"
-import { deleteProductSchema, DeleteProductSchema } from "./schema"
+import { deleteProductSchema} from "./schema"
 import { actionClient } from "@/app/_lib/safe-action"
 import { returnValidationErrors } from "next-safe-action"
 

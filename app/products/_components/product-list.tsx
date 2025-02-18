@@ -1,4 +1,4 @@
-import { cachedGetProducts, gretProductsWithCache, sum } from "@/app/_data-access/product/get-products";
+import { gretProductsWithCache, sum } from "@/app/_data-access/product/get-products";
 
 //para testar o function memoization
 const ProductList = async() => {
