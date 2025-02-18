@@ -66,7 +66,7 @@ interface UpsertSaleProductContentProps {
   products: ProductDto[];
   productOptions: ComboboxOption[];
   onSubmitSuccess: () => void;
-  defaultSelectedProducts: SelectedProducts[];
+  defaultSelectedProducts?: SelectedProducts[];
 }
 
 const UpsertSaleProductContent = ({
