@@ -25,7 +25,7 @@ const UpsertSaleButton = ({
           Nova Venda
         </Button>
       </SheetTrigger>
-      {/* @ts-ignore */}
+      {/* @ts-expect-error */}
       <UpsertSaleProductContent
         onSubmitSuccess={() => setSheetIsOpen(false)}
         isOpen={sheetIsOpen}

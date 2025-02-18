@@ -20,12 +20,11 @@ const ProductStatusBadge = ({status}: ProductStatusBadgeProps) => {
           className="gap-2"
           variant={
             label === "Em estoque" ? "default" : "secondary"
-          } /* @ts-ignore */
+          }
         >
           <CircleIcon
             size={10}
             className={
-              /* @ts-ignore */
               status === "IN_STOCK" ? "fill-white" : "fill-black"
             }
           />

@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/app/_lib/prisma";
-import { upsertSaleSchema, UpsertSaleSchema } from "./schema";
+import { upsertSaleSchema } from "./schema";
 import { revalidatePath } from "next/cache";
 import { actionClient } from "@/app/_lib/safe-action";
 import { returnValidationErrors } from "next-safe-action";
