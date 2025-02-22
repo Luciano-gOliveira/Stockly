@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "dev": "next dev",
     "lint": "next lint",
-    "prepare": "prisma generate"
+    "prepare": "prisma generate",
+    "start": "next start"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -33,6 +33,7 @@
     "react-number-format": "^5.4.2",
     "recharts": "^2.15.1",
     "sonner": "^1.7.1",
+    "sst": "3.9.9",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.1"
